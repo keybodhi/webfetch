@@ -1,3 +1,8 @@
+// MCP-webfetch — MIT License
+// Derived from opencode's webfetch tool (https://github.com/anomalyco/opencode) — MIT
+// References Effect's HttpClient architecture (https://github.com/Effect-TS/effect) — MIT
+// Modifications: proxy support, MCP protocol, redirect following, JS port
+
 const http = require("http");
 const https = require("https");
 const net = require("net");
@@ -205,6 +210,14 @@ function processRawHttps(raw, resolve, reject) {
     }
     const isChunked = (resHeaders["transfer-encoding"] || "").toLowerCase().split(",").map(s => s.trim()).includes("chunked");
     let decoded = isChunked ? decodeChunkedBody(body) : body;
+
+    // Consume chunked trailers (headers after last chunk)
+    if (isChunked && decoded.length > 0) {
+      const trailerIdx = decoded.indexOf("\r\n\r\n");
+      if (trailerIdx !== -1) {
+        decoded = decoded.subarray(trailerIdx + 4);
+      }
+    }
 
     resolve({ statusCode, headers: resHeaders, body: decoded });
   } catch (e) {
