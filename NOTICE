@@ -1,0 +1,19 @@
+MCP-webfetch
+Copyright (c) 2026
+
+This project is a derivative work of opencode's webfetch tool,
+which is part of the opencode project (https://github.com/anomalyco/opencode)
+licensed under the Apache License, Version 2.0.
+
+The following functions are derived from opencode's webfetch.ts:
+  - acceptHeader, headers, mimeFrom, isImageAttachment, isTextualMime
+  - isCloudflareChallenge, convert, extractTextFromHTML, convertHTMLToMarkdown
+  - collectBoundedResponseBody
+  - description text and constant definitions
+
+Modifications from the original include:
+  - Replaced Effect framework with Node.js native http + async/await
+  - Added HTTP proxy support via CONNECT tunnel
+  - Added MCP protocol layer (stdin/stdout JSON-RPC)
+  - Converted TypeScript to JavaScript
+  - Added redirect following with loop detection
